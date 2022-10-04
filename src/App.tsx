@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import Header from './components/Header';
@@ -7,142 +7,121 @@ import Answerboard from './components/Answerboard';
 import Keyboard from './components/Keyboard';
 import EndGame from './components/EndGame';
 
-interface Letter {
+const keyboardLetters: string[] = [
+	'q',
+	'w',
+	'e',
+	'r',
+	't',
+	'y',
+	'u',
+	'i',
+	'o',
+	'p',
+	'a',
+	's',
+	'd',
+	'f',
+	'g',
+	'h',
+	'J',
+	'k',
+	'l',
+	'z',
+	'x',
+	'c',
+	'v',
+	'b',
+	'n',
+	'm',
+];
+
+const answer = 'Hangman';
+
+type Letters = {
 	letter: string;
-	isShow: boolean;
-}
+	keyPressWrongLetter: boolean;
+	keyPressCurentLetter: boolean;
+	isAnswerWordLetter: boolean;
+};
 
 function App() {
-	console.log('rerender');
+	const [lettersObj, setLettersObj] = useState<Letters[]>([]);
 
-	const answer: string = 'Daniello';
-	const answerLetters = Array.from(answer.toLowerCase());
-	// let spaceIndex: number | undefined;
-	let counterGoodLetters: number = 0;
+	useEffect(() => {
+		createAnswerObjHandler(answer, keyboardLetters);
+	}, []);
 
-	const [goodLetter, setGoodLetter] = useState<string[]>([]);
-	const [badLetter, setBadLetter] = useState<string[]>([]);
-	const [letters, setLetters] = useState<Letter[]>();
-	const [spaceIndex, setSpaceIndex] = useState<number>();
-	const [gameIsOwer, setGameIsOwer] = useState<boolean>(false);
-
-	const createLettersObjectHandler = () => {
-		// console.log(letters);
-
-		if (letters === undefined) {
-			//TODO Ranodm words grenerator
-			console.log('lsl');
-
-			answerLetters.filter((letter, index) => {
-				if (letter === ' ') {
-					setSpaceIndex(index);
+	const createAnswerObjHandler = (answerWord: string, keyboardLetters: String[]) => {
+		//*CHecking whtch letters is answer letters
+		const answerWordArray = [...answerWord.toLowerCase()];
+		const lettersOnAnswer = keyboardLetters.filter(letterKeyboard => {
+			const answerLetter = answerWordArray.filter(letterAnswer => {
+				if (letterAnswer === letterKeyboard) {
+					return letterKeyboard;
 				}
-			}); //*Filter is space exist
-
-			if (spaceIndex) {
-				//* Cut space
-				const firstWord = answerLetters.slice(0, spaceIndex);
-				const secondWord = answerLetters.slice(spaceIndex + 1, answerLetters.length);
-
-				const word = firstWord.concat(secondWord);
-
-				const wordObj: Letter[] = word.map(letter => {
-					return {
-						letter: letter,
-						isShow: false,
-					};
-				});
-
-				setLetters(wordObj);
-			}
-			const wordObj: Letter[] = answerLetters.map(letter => {
-				return {
-					letter: letter,
-					isShow: false,
-				};
 			});
-			setLetters(wordObj);
-		}
-	};
 
-	const checkLettersHandler = () => {
-		//!spagetti code Fix IT!!!!
-		if (letters !== undefined) {
-			goodLetter.forEach(letter => {
-				letters?.forEach(letterObj => {
-					if (letter === letterObj.letter) {
-						const newLetters = [...letters];
-
-						newLetters.forEach(letterObj => {
-							if (letterObj.letter === letter) {
-								// eslint-disable-next-line no-sequences
-								return letterObj.letter, (letterObj.isShow = true);
-							} else return letterObj;
-						});
-					}
-				});
-			});
-		}
-	};
-
-	const checkAnswerHandler = (letter: string) => {
-		if (answerLetters.find(findLetter => findLetter === letter)) {
-			if (!goodLetter.find(findLetter => findLetter === letter)) {
-				setGoodLetter(prevState => [...prevState, letter]);
-			} //*Checks whether a letter has been used
-		} else {
-			setBadLetter(prevState => [...prevState, letter]);
-		}
-	}; //*keyboard checking letters
-
-	const checkWon = () => {
-		counterGoodLetters = 0;
-		letters?.forEach(letterObj => {
-			if (letterObj.isShow === false) {
-				return null;
-			} else {
-				counterGoodLetters++;
+			if (answerLetter.length !== 0) {
+				return answerLetter;
 			}
 		});
-		if (counterGoodLetters === letters?.length) {
-			console.log('Gra skońµćzone');
+		//ToDO Change "any" type is not good
+		const mainLettersObj: any = keyboardLetters.map(letterKeyboard => {
+			let letterIsInAnswer: boolean = false;
 
-			setGameIsOwer(true);
-		}
+			lettersOnAnswer.filter(letterAnswer => {
+				if (letterAnswer === letterKeyboard) {
+					return (letterIsInAnswer = true);
+				}
+			});
+
+			return {
+				letter: letterKeyboard,
+				keyPressWrongLetter: false,
+				keyPressCurentLetter: false,
+				isAnswerWordLetter: letterIsInAnswer,
+			};
+		});
+		setLettersObj(mainLettersObj);
+	}; //*Create a Letters Object
+
+	const keycapOnClickHandler = (letterKeycap: string) => {
+		const newLetterObj: any = lettersObj.map((letterObj, index) => {
+			const { letter, keyPressCurentLetter, keyPressWrongLetter, isAnswerWordLetter } = letterObj;
+
+			let currentKeypressLetter = keyPressCurentLetter;
+			let wrongKeypressletter = keyPressWrongLetter;
+
+			if (letterKeycap === letter) {
+				if (isAnswerWordLetter) {
+					currentKeypressLetter = true;
+				} else {
+					wrongKeypressletter = true;
+				}
+			}
+
+			return {
+				letter: letter,
+				keyPressWrongLetter: wrongKeypressletter,
+				keyPressCurentLetter: currentKeypressLetter,
+				isAnswerWordLetter: isAnswerWordLetter,
+			};
+		});
+
+		setLettersObj(newLetterObj);
 	};
-
-	const resetGameHandler = () => {
-		counterGoodLetters = 0;
-		setBadLetter([]);
-		setGoodLetter([]);
-		setLetters([]);
-		setGameIsOwer(false);
-	};
-
-	checkWon();
-	createLettersObjectHandler();
-	checkLettersHandler();
 
 	return (
 		<StyledDiv>
 			<Header />
 			<Gameboard />
 			<StyledKeyboardContainer>
-				<Answerboard
-					answerLetters={answerLetters}
-					goodLetters={goodLetter}
-					spaceIndex={spaceIndex}
-					letters={letters}
-				/>
-				<Keyboard
-					checkAnswerOnClick={checkAnswerHandler}
-					badLetter={badLetter}
-					goodLetter={goodLetter}
-				/>
+				<Keyboard lettersObj={lettersObj} onClickHandler={keycapOnClickHandler} />
 			</StyledKeyboardContainer>
-
+			{/* 
 			{badLetter.length >= 10 && <EndGame resetOnClick={resetGameHandler} type='Game Over' />}
-			{gameIsOwer && <EndGame resetOnClick={resetGameHandler} type='You Won' />}
+			{gameIsOwer && <EndGame resetOnClick={resetGameHandler} type='You Won' />} */}
 		</StyledDiv>
 	);
 }

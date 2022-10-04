@@ -2,112 +2,76 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-interface Props {
-	checkAnswerOnClick: (letter: string) => void;
-	goodLetter: string[];
-	badLetter: string[];
-}
+type Letters = {
+	letter: string;
+	keyPressWrongLetter: boolean;
+	keyPressCurentLetter: boolean;
+	isAnswerWordLetter: boolean;
+};
 
-interface StyledProps {
-	bgcColor: string;
-}
+type KeyboardProps = {
+	lettersObj: Letters[];
+	onClickHandler: (letterKeycap: string) => void;
+};
 
-const keyboardTop: string[] = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
-const keyboardMiddle: string[] = ['a', 's', 'd', 'f', 'g', 'h', 'J', 'k', 'l'];
-const keyboardBottom: string[] = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
+type PropsStyle = {
+	bgc: string;
+};
 
-const Keyboard = ({ checkAnswerOnClick, goodLetter, badLetter }: Props) => {
-	//!!Not working Don't now why
-	//todo Must Fix It!!!
-	// const renderKeyboaard = (keyboard: string[]): ReactElement => {
-	// 	keyboard.map(keyCap => {
-	// 		return (
-	// 			<KeyCapDiv>
-	// 				<p>{keyCap} </p>
-	// 			</KeyCapDiv>
-	// 		);
-	// 	});
-	// };
+// backgroundColor = 'rgba(20, 255, 0, 0.47)'; green
+// backgroundColor = 'rgba(0, 0, 0, 0.5)'; BLack Wrong letter
 
-	const keyboardTopKeyCap = keyboardTop.map(keyCap => {
-		let backgroundColor: string = 'rgba(255, 255, 255, 0.5)';
+const Keyboard = ({ lettersObj, onClickHandler }: KeyboardProps) => {
+	const keyboardTop = lettersObj.slice(0, 10);
+	const keyboardMiddle = lettersObj.slice(10, 19);
+	const keyboardBottom = lettersObj.slice(19, 26);
 
-		goodLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(20, 255, 0, 0.47)';
+	const backgroundColorCurrentKeycap = 'rgba(20, 255, 0, 0.47)';
+	const backgroundColorWrongKeycap = 'rgba(0, 0, 0, 0.5)';
+	const backgroundColorNoClickkeycap = 'rgba(255, 255, 255, 0.5)';
+
+	const renderKeyboardHandler = (keyboardLetters: Letters[]) => {
+		const renderKeyboard = keyboardLetters.map(letterObj => {
+			const { letter, keyPressCurentLetter, keyPressWrongLetter } = letterObj;
+
+			if (keyPressWrongLetter === true) {
+				return (
+					<KeyCapDiv
+						bgc={backgroundColorWrongKeycap}
+						key={letter}
+						onClick={onClickHandler.bind(null, letter)}>
+						<p>{letter}</p>
+					</KeyCapDiv>
+				);
+			} else if (keyPressCurentLetter === true) {
+				return (
+					<KeyCapDiv
+						bgc={backgroundColorCurrentKeycap}
+						key={letter}
+						onClick={onClickHandler.bind(null, letter)}>
+						<p>{letter}</p>
+					</KeyCapDiv>
+				);
+			} else {
+				return (
+					<KeyCapDiv
+						bgc={backgroundColorNoClickkeycap}
+						key={letter}
+						onClick={onClickHandler.bind(null, letter)}>
+						<p>{letter}</p>
+					</KeyCapDiv>
+				);
 			}
 		});
 
-		badLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(0, 0, 0, 0.5)';
-			}
-		});
-
-		return (
-			<KeyCapDiv
-				key={keyCap}
-				onClick={checkAnswerOnClick.bind(null, keyCap)}
-				bgcColor={backgroundColor}>
-				<p>{keyCap}</p>
-			</KeyCapDiv>
-		);
-	});
-
-	const keyboardMiddleKeyCap = keyboardMiddle.map(keyCap => {
-		let backgroundColor: string = 'rgba(255, 255, 255, 0.5)';
-
-		goodLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(20, 255, 0, 0.47)';
-			}
-		});
-
-		badLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(0, 0, 0, 0.5)';
-			}
-		});
-		return (
-			<KeyCapDiv
-				key={keyCap}
-				onClick={checkAnswerOnClick.bind(null, keyCap)}
-				bgcColor={backgroundColor}>
-				<p>{keyCap}</p>
-			</KeyCapDiv>
-		);
-	});
-
-	const keyboardBottomKeyCap = keyboardBottom.map(keyCap => {
-		let backgroundColor: string = 'rgba(255, 255, 255, 0.5)';
-
-		goodLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(20, 255, 0, 0.47)';
-			}
-		});
-
-		badLetter.forEach(letter => {
-			if (letter === keyCap) {
-				backgroundColor = 'rgba(0, 0, 0, 0.5)';
-			}
-		});
-
-		return (
-			<KeyCapDiv
-				key={keyCap}
-				onClick={checkAnswerOnClick.bind(null, keyCap)}
-				bgcColor={backgroundColor}>
-				<p>{keyCap}</p>
-			</KeyCapDiv>
-		);
-	});
+		return renderKeyboard;
+	};
 
 	return (
 		<>
-			<StyledkeyboardContainer>{keyboardTopKeyCap}</StyledkeyboardContainer>
-			<StyledkeyboardContainer>{keyboardMiddleKeyCap}</StyledkeyboardContainer>
-			<StyledkeyboardContainer>{keyboardBottomKeyCap}</StyledkeyboardContainer>
+			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardTop)}</StyledkeyboardContainer>
+			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardMiddle)}</StyledkeyboardContainer>
+			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardBottom)}</StyledkeyboardContainer>
 		</>
 	);
 };
@@ -122,7 +86,7 @@ const StyledkeyboardContainer = styled.div`
 	margin-top: 5px;
 `;
 
-const KeyCapDiv = styled.button<StyledProps>`
+const KeyCapDiv = styled.button<PropsStyle>`
 	all: unset;
 	display: flex;
 	align-items: center;
@@ -134,8 +98,7 @@ const KeyCapDiv = styled.button<StyledProps>`
 	border-radius: 8px;
 	cursor: pointer;
 	/* transition: background-color 0.1s; */
-
-	background-color: ${props => props.bgcColor};
+	background-color: ${props => props.bgc};
 
 	&:hover {
 		background-color: rgba(255, 255, 255, 0.9);
