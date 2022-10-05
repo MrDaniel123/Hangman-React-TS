@@ -1,38 +1,77 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface Letter {
+type Letters = {
 	letter: string;
-	isShow: boolean;
-}
+	keyPressWrongLetter: boolean;
+	keyPressCurentLetter: boolean;
+	isAnswerWordLetter: boolean;
+};
 
-interface Props {
-	answerLetters: string[];
-	goodLetters: string[];
-	spaceIndex: number | any;
-	letters: any;
-}
+type AnswerProps = {
+	lettersObj: Letters[];
+	answerWordLetters: string[];
+	setGameIsWon: (isWon: boolean) => void;
+};
 
-const Answerboard = ({ answerLetters, goodLetters, spaceIndex, letters }: Props) => {
-	const renderAnswerLetters = letters.map((letter: Letter) => {
-		return (
-			<WordContainerDiv>
-				{letter.isShow ? (
-					<LetterStyledDiv>
-						<p>{letter.letter.toUpperCase()}</p>
-						<span></span>
-					</LetterStyledDiv>
-				) : (
-					<EmptyLetterDiv>
-						<p></p>
-						<span></span>
-					</EmptyLetterDiv>
-				)}
-			</WordContainerDiv>
-		);
+type Tab = {
+	letter: string;
+	isGoodAnswer: boolean;
+};
+
+const Answerboard = ({ lettersObj, answerWordLetters, setGameIsWon }: AnswerProps) => {
+	let answerLettersObj: Tab[] = [];
+
+	//* Create AnswerLetterObj Magic XD
+	answerWordLetters.forEach(answerLetter => {
+		lettersObj.forEach(letterObj => {
+			const { letter, keyPressCurentLetter } = letterObj;
+			if (letter === answerLetter && keyPressCurentLetter) {
+				answerLettersObj.push({
+					letter: letter,
+					isGoodAnswer: true,
+				});
+			} else if (letter === answerLetter) {
+				answerLettersObj.push({
+					letter: letter,
+					isGoodAnswer: false,
+				});
+			}
+		});
 	});
 
-	return <StyledContainerDiv>{renderAnswerLetters}</StyledContainerDiv>;
+	const goodChoices = answerLettersObj.filter(answerLetterObj => {
+		if (answerLetterObj.isGoodAnswer) {
+			return [true];
+		}
+	});
+	if (goodChoices.length >= answerWordLetters.length) {
+		setGameIsWon(true);
+	}
+
+	const renderAnswerLetters = answerLettersObj.map(answerLetterObj => {
+		if (answerLetterObj.isGoodAnswer) {
+			return (
+				<LetterStyledDiv>
+					<p>{answerLetterObj.letter.toUpperCase()}</p>
+					<span></span>
+				</LetterStyledDiv>
+			);
+		} else {
+			return (
+				<EmptyLetterDiv>
+					<p></p>
+					<span></span>
+				</EmptyLetterDiv>
+			);
+		}
+	});
+
+	return (
+		<StyledContainerDiv>
+			<WordContainerDiv>{renderAnswerLetters}</WordContainerDiv>
+		</StyledContainerDiv>
+	);
 };
 
 const StyledContainerDiv = styled.div`
@@ -103,3 +142,14 @@ const EmptyLetterDiv = styled.div`
 `;
 
 export default Answerboard;
+
+{
+	/* <LetterStyledDiv>
+<p>{letter.letter.toUpperCase()}</p>
+<span></span>
+</LetterStyledDiv>
+) : (
+<EmptyLetterDiv>
+<p></p>
+<span></span> */
+}

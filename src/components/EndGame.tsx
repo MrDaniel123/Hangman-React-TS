@@ -5,15 +5,15 @@ import styled from 'styled-components';
 import resetIcon from '../assets/resetIcon.svg';
 
 interface Props {
-	resetOnClick: () => void;
 	type: string;
+	resetButtonOnClick: () => void;
 }
 
-interface StyleProps {
+type StyleProps = {
 	bgcColor: string;
-}
+};
 
-const EndGame = ({ resetOnClick, type }: Props) => {
+const EndGame = ({ type, resetButtonOnClick }: Props) => {
 	let bgcColor = 'rgba(255, 0, 0, 0.7)';
 
 	if (type === 'You Won') {
@@ -25,7 +25,7 @@ const EndGame = ({ resetOnClick, type }: Props) => {
 			<div>
 				<p>{type}</p>
 			</div>
-			<button onClick={resetOnClick}>
+			<button onClick={resetButtonOnClick}>
 				Reset
 				<img src={resetIcon} alt='Reset Button' />
 			</button>

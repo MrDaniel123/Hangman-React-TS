@@ -36,7 +36,7 @@ const keyboardLetters: string[] = [
 	'm',
 ];
 
-const answer = 'Hangman';
+const answerWord = 'Hangman';
 
 type Letters = {
 	letter: string;
@@ -47,14 +47,18 @@ type Letters = {
 
 function App() {
 	const [lettersObj, setLettersObj] = useState<Letters[]>([]);
+	const [counterWorngANswer, setCounterWrongAnswer] = useState<number>(0);
+	const [gameIsWOn, setGameIsWon] = useState<boolean>(false);
+	const [numberOfGames, setNumberOfGames] = useState<number>(0);
 
 	useEffect(() => {
-		createAnswerObjHandler(answer, keyboardLetters);
-	}, []);
+		createAnswerObjHandler(answerWordArray, keyboardLetters);
+	}, [numberOfGames]);
 
-	const createAnswerObjHandler = (answerWord: string, keyboardLetters: String[]) => {
+	let answerWordArray: string[] = [...answerWord.toLowerCase()];
+
+	const createAnswerObjHandler = (answerWordArray: string[], keyboardLetters: String[]) => {
 		//*CHecking whtch letters is answer letters
-		const answerWordArray = [...answerWord.toLowerCase()];
 		const lettersOnAnswer = keyboardLetters.filter(letterKeyboard => {
 			const answerLetter = answerWordArray.filter(letterAnswer => {
 				if (letterAnswer === letterKeyboard) {
@@ -66,7 +70,9 @@ function App() {
 				return answerLetter;
 			}
 		});
+
 		//ToDO Change "any" type is not good
+		//!! CHange any type Important
 		const mainLettersObj: any = keyboardLetters.map(letterKeyboard => {
 			let letterIsInAnswer: boolean = false;
 
@@ -98,6 +104,7 @@ function App() {
 					currentKeypressLetter = true;
 				} else {
 					wrongKeypressletter = true;
+					setCounterWrongAnswer(counterWorngANswer + 1);
 				}
 			}
 
@@ -112,16 +119,33 @@ function App() {
 		setLettersObj(newLetterObj);
 	};
 
+	const setGameIsWonHandler = (isWon: boolean) => {
+		setGameIsWon(isWon);
+	};
+
+	const resetGameHandler = () => {
+		setNumberOfGames(numberOfGames + 1);
+		setCounterWrongAnswer(0);
+		setGameIsWon(false);
+	};
+
 	return (
 		<StyledDiv>
 			<Header />
 			<Gameboard />
 			<StyledKeyboardContainer>
+				<Answerboard
+					lettersObj={lettersObj}
+					answerWordLetters={answerWordArray}
+					setGameIsWon={setGameIsWonHandler}
+				/>
 				<Keyboard lettersObj={lettersObj} onClickHandler={keycapOnClickHandler} />
 			</StyledKeyboardContainer>
-			{/* 
-			{badLetter.length >= 10 && <EndGame resetOnClick={resetGameHandler} type='Game Over' />}
-			{gameIsOwer && <EndGame resetOnClick={resetGameHandler} type='You Won' />} */}
+
+			{counterWorngANswer >= 6 && (
+				<EndGame type='Game Over' resetButtonOnClick={resetGameHandler} />
+			)}
+			{gameIsWOn && <EndGame type='You Won' resetButtonOnClick={resetGameHandler} />}
 		</StyledDiv>
 	);
 }
