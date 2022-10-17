@@ -2,76 +2,68 @@ import React from 'react';
 
 import styled from 'styled-components';
 
-type Letters = {
-	letter: string;
-	keyPressWrongLetter: boolean;
-	keyPressCurentLetter: boolean;
-	isAnswerWordLetter: boolean;
-};
-
 type KeyboardProps = {
-	lettersObj: Letters[];
-	onClickHandler: (letterKeycap: string) => void;
+	keyboardLetters: string[];
+	wrongLetters: string[];
+	goodLetters: string[];
+	onClickHandler: (clickedLetter: string) => void;
 };
 
 type PropsStyle = {
 	bgc: string;
 };
 
-// backgroundColor = 'rgba(20, 255, 0, 0.47)'; green
-// backgroundColor = 'rgba(0, 0, 0, 0.5)'; BLack Wrong letter
+const Keyboard = ({
+	keyboardLetters,
+	wrongLetters,
+	goodLetters,
+	onClickHandler,
+}: KeyboardProps) => {
+	const keyboardTop = keyboardLetters.slice(0, 10);
+	const keyboardMiddle = keyboardLetters.slice(10, 19);
+	const keyboardBottom = keyboardLetters.slice(19, 26);
 
-const Keyboard = ({ lettersObj, onClickHandler }: KeyboardProps) => {
-	const keyboardTop = lettersObj.slice(0, 10);
-	const keyboardMiddle = lettersObj.slice(10, 19);
-	const keyboardBottom = lettersObj.slice(19, 26);
-
-	const backgroundColorCurrentKeycap = 'rgba(20, 255, 0, 0.47)';
+	const backgroundColorGoodKeycap = 'rgba(20, 255, 0, 0.47)';
 	const backgroundColorWrongKeycap = 'rgba(0, 0, 0, 0.5)';
-	const backgroundColorNoClickkeycap = 'rgba(255, 255, 255, 0.5)';
+	const backgroundColorNoClickKeycap = 'rgba(255, 255, 255, 0.5)';
 
-	const renderKeyboardHandler = (keyboardLetters: Letters[]) => {
-		const renderKeyboard = keyboardLetters.map(letterObj => {
-			const { letter, keyPressCurentLetter, keyPressWrongLetter } = letterObj;
-
-			if (keyPressWrongLetter === true) {
+	const renderButtonKeyboardHandler = (letters: string[]) => {
+		const renderKeyboard = letters.map(letter => {
+			if (goodLetters.includes(letter)) {
 				return (
-					<KeyCapDiv
-						bgc={backgroundColorWrongKeycap}
-						key={letter}
-						onClick={onClickHandler.bind(null, letter)}>
+					<KeyCapButton bgc={backgroundColorGoodKeycap} key={letter}>
 						<p>{letter}</p>
-					</KeyCapDiv>
+					</KeyCapButton>
 				);
-			} else if (keyPressCurentLetter === true) {
+			} else if (wrongLetters.includes(letter)) {
 				return (
-					<KeyCapDiv
-						bgc={backgroundColorCurrentKeycap}
-						key={letter}
-						onClick={onClickHandler.bind(null, letter)}>
+					<KeyCapButton bgc={backgroundColorWrongKeycap} key={letter}>
 						<p>{letter}</p>
-					</KeyCapDiv>
+					</KeyCapButton>
 				);
 			} else {
 				return (
-					<KeyCapDiv
-						bgc={backgroundColorNoClickkeycap}
-						key={letter}
-						onClick={onClickHandler.bind(null, letter)}>
+					<KeyCapButton
+						onClick={() => onClickHandler(letter)}
+						bgc={backgroundColorNoClickKeycap}
+						key={letter}>
 						<p>{letter}</p>
-					</KeyCapDiv>
+					</KeyCapButton>
 				);
 			}
 		});
-
 		return renderKeyboard;
 	};
 
 	return (
 		<>
-			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardTop)}</StyledkeyboardContainer>
-			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardMiddle)}</StyledkeyboardContainer>
-			<StyledkeyboardContainer>{renderKeyboardHandler(keyboardBottom)}</StyledkeyboardContainer>
+			<StyledkeyboardContainer>{renderButtonKeyboardHandler(keyboardTop)}</StyledkeyboardContainer>
+			<StyledkeyboardContainer>
+				{renderButtonKeyboardHandler(keyboardMiddle)}
+			</StyledkeyboardContainer>
+			<StyledkeyboardContainer>
+				{renderButtonKeyboardHandler(keyboardBottom)}
+			</StyledkeyboardContainer>
 		</>
 	);
 };
@@ -86,7 +78,7 @@ const StyledkeyboardContainer = styled.div`
 	margin-top: 5px;
 `;
 
-const KeyCapDiv = styled.button<PropsStyle>`
+const KeyCapButton = styled.button<PropsStyle>`
 	all: unset;
 	display: flex;
 	align-items: center;

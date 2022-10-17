@@ -1,81 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
 
-type Letters = {
-	letter: string;
-	keyPressWrongLetter: boolean;
-	keyPressCurentLetter: boolean;
-	isAnswerWordLetter: boolean;
-};
-
 type AnswerProps = {
-	lettersObj: Letters[];
-	gameIsWonHandler: (isWon: boolean) => void;
+	answer: string;
+	guesedLetters: string[];
 };
 
-type Tab = {
-	letter: string;
-	isGoodAnswer: boolean;
-};
-
-const Answerboard = ({ lettersObj, gameIsWonHandler }: AnswerProps) => {
-	let answerLettersObj: Tab[] = [];
-
-	// //* Create AnswerLetterObj Magic XD
-	// answerWordLetters.forEach(answerLetter => {
-	// 	lettersObj.forEach(letterObj => {
-	// 		const { letter, keyPressCurentLetter } = letterObj;
-	// 		if (letter === answerLetter && keyPressCurentLetter) {
-	// 			answerLettersObj.push({
-	// 				letter: letter,
-	// 				isGoodAnswer: true,
-	// 			});
-	// 		} else if (letter === answerLetter) {
-	// 			answerLettersObj.push({
-	// 				letter: letter,
-	// 				isGoodAnswer: false,
-	// 			});
-	// 		}
-	// 	});
-	// });
-
-	lettersObj.forEach(letterObj => {
-		if (letterObj.isAnswerWordLetter) {
-			answerLettersObj.push({
-				letter: letterObj.letter,
-				isGoodAnswer: true,
-			});
-		} else {
-			answerLettersObj.push({
-				letter: letterObj.letter,
-				isGoodAnswer: false,
-			});
-		}
-	});
-
-	const goodChoices = answerLettersObj.filter(answerLetterObj => {
-		if (answerLetterObj.isGoodAnswer) {
-			return [true];
-		}
-	});
-
-	//! if won must click reset button two times
-	//!Propably bug is there Fix IT!!!
-	// if (goodChoices.length >= answerWordLetters.length) {
-	// 	gameIsWonHandler(true);
-	// }
-
-	const renderAnswerLetters = answerLettersObj.map((answerLetterObj, index) => {
-		if (answerLetterObj.isGoodAnswer) {
+const Answerboard = ({ answer, guesedLetters }: AnswerProps) => {
+	const answerArray = [...answer];
+	const renderAnswersLetters = answerArray.map((letter, index) => {
+		if (guesedLetters.includes(letter)) {
 			return (
-				<LetterStyledDiv key={answerLetterObj.letter + index}>
-					<p>{answerLetterObj.letter.toUpperCase()}</p>
+				<LetterStyledDiv key={index}>
+					<p>{letter}</p>
 					<span></span>
 				</LetterStyledDiv>
 			);
 		} else {
 			return (
-				<EmptyLetterDiv key={answerLetterObj.letter + index}>
+				<EmptyLetterDiv key={index}>
 					<p></p>
 					<span></span>
 				</EmptyLetterDiv>
@@ -85,7 +28,7 @@ const Answerboard = ({ lettersObj, gameIsWonHandler }: AnswerProps) => {
 
 	return (
 		<StyledContainerDiv>
-			<WordContainerDiv>{renderAnswerLetters}</WordContainerDiv>
+			<WordContainerDiv>{renderAnswersLetters}</WordContainerDiv>
 		</StyledContainerDiv>
 	);
 };

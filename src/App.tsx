@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import styled from 'styled-components';
 
 import Header from './components/Header';
@@ -7,33 +7,22 @@ import Answerboard from './components/Answerboard';
 import Keyboard from './components/Keyboard';
 import EndGame from './components/EndGame';
 
-//---------------------------------------Typr
-type Letters = {
-	letter: string;
-	keyPressWrongLetter: boolean;
-	keyPressCurentLetter: boolean;
-	isAnswerWordLetter: boolean;
-};
-
 type StateReducer = {
-	answerLetters: string[];
-	isLoadingAnswerLetters: boolean;
-	lettersObj: Letters[];
-	// gameIsWon: boolean;
+	answer: string;
+	goodLetters: string[];
+	wrongLetters: string[];
+	guessedLetters: string[];
+	winGamePopUp: boolean;
+	loosGamePopUp: boolean;
 };
 
 type ReducerAction =
-	| { type: 'GENERATE_ANSWER_LETTERS' }
-	| { type: 'LOADING_ANSWER_LETTERS'; payload: boolean }
-	| { type: 'GENEREATE_ANSWER_OBJECT'; payload: string[] }
-	| { type: 'MODIFICATION_ANSWER_OBJECT'; payload: Letters[] }
-	| { type: 'DRAW_ANSWER_WORD' };
-// | { type: 'SET_GAME_IS_WON'; payload: boolean };
+	| { type: 'SET_GOOD_LETTERS'; payload: string[] }
+	| { type: 'SET_WRONG_LETTERS'; payload: string[] }
+	| { type: 'SET_GUESSED_LETTERS'; payload: string[] }
+	| { type: 'SHOW_WIN_GAME_POPUP' }
+	| { type: 'RESET_GAME' };
 
-//------------------------------------------
-//------------------------------------------Variables and outside functions
-//------------------------------------------
-//------------------------------------------
 const keyboardLetters: string[] = [
 	'q',
 	'w',
@@ -63,160 +52,124 @@ const keyboardLetters: string[] = [
 	'm',
 ];
 
-const answerWords: string[] = ['Hangman', 'Awesome', 'Mordor', 'Imagine'];
+const answers: string[] = [
+	'mouse',
+	'snake',
+	'elephant',
+	'butterfly',
+	'mouse',
+	'monkey',
+	'chicken',
+	'giraffe',
+	'crocodrile',
+	'hippoptamus',
+	'penguin',
+	'shark',
+	'kangaroo',
+	'dolphin',
+];
 
-const generateAnswerObject = (answerWordArray: string[], keyboardLetters: String[]) => {
-	console.log('generate object', answerWordArray);
-
-	const lettersOnAnswer = keyboardLetters.filter(letterKeyboard => {
-		const answerLetter = answerWordArray.filter(letterAnswer => {
-			if (letterAnswer === letterKeyboard) {
-				return letterKeyboard;
-			}
-		});
-
-		if (answerLetter.length !== 0) {
-			return answerLetter;
-		}
-	});
-
-	//ToDO Change "any" type is not good
-	//!! CHange any type Important
-	const mainLettersObj: any = keyboardLetters.map(letterKeyboard => {
-		let letterIsInAnswer: boolean = false;
-
-		lettersOnAnswer.filter(letterAnswer => {
-			if (letterAnswer === letterKeyboard) {
-				return (letterIsInAnswer = true);
-			}
-		});
-
-		return {
-			letter: letterKeyboard,
-			keyPressWrongLetter: false,
-			keyPressCurentLetter: false,
-			isAnswerWordLetter: letterIsInAnswer,
-		};
-	});
-	return mainLettersObj;
-}; //*Create a Letters Object
-
-//------------------------------------------
-//------------------------------------------
-//------------------------------------------
-//------------------------------------------
-
-const randomizeAnswerLetters = () => {
-	return [...answerWords[Math.floor(Math.random() * answerWords.length)].toLowerCase()];
-};
-
-const initialState = {
-	answerLetters: randomizeAnswerLetters(),
-	isLoadingAnswerLetters: false,
-	lettersObj: [],
-	gameIsWon: false,
+const initialState: StateReducer = {
+	answer: answers[Math.floor(Math.random() * answers.length)],
+	goodLetters: [],
+	wrongLetters: [],
+	guessedLetters: [],
+	winGamePopUp: false,
+	loosGamePopUp: false,
 };
 
 function reducer(state: StateReducer, action: ReducerAction) {
 	switch (action.type) {
-		case 'GENEREATE_ANSWER_OBJECT':
-			console.log('generate answer objewct: ', action.payload);
-
-			return { ...state, lettersObj: generateAnswerObject(action.payload, keyboardLetters) };
-		case 'LOADING_ANSWER_LETTERS':
-			return { ...state, isLoadingAnswerLetters: action.payload };
-		case 'MODIFICATION_ANSWER_OBJECT':
-			return { ...state, lettersObj: action.payload };
-		case 'DRAW_ANSWER_WORD':
+		case 'SET_GOOD_LETTERS':
+			return { ...state, goodLetters: action.payload };
+		case 'SET_WRONG_LETTERS':
+			return { ...state, wrongLetters: action.payload };
+		case 'SET_GUESSED_LETTERS':
+			return { ...state, guessedLetters: action.payload };
+		case 'SHOW_WIN_GAME_POPUP':
+			return { ...state, winGamePopUp: true };
+		case 'RESET_GAME':
 			return {
 				...state,
-				answerLetters: [
-					...answerWords[Math.floor(Math.random() * answerWords.length)].toLowerCase(),
-				],
+				goodLetters: [],
+				wrongLetters: [],
+				guessedLetters: [],
+				winGamePopUp: false,
+				loosGamePopUp: false,
+				answer: answers[Math.floor(Math.random() * answers.length)],
 			};
 		default:
-			throw new Error('');
+			throw new Error();
 	}
 }
-
-//-----------------------------------------------------
 
 function App() {
 	const [state, dispatch] = useReducer(reducer, initialState);
 
-	const [gameIsWon, setGameIsWon] = useState<boolean>(false);
-
-	const keycapOnClickHandler = (letterKeycap: string) => {
-		console.log('keycP CLICK');
-
-		const newLettersObj: Letters[] = state.lettersObj.map((letterObj: Letters) => {
-			const { letter, keyPressCurentLetter, keyPressWrongLetter, isAnswerWordLetter } = letterObj;
-
-			let currentKeypressLetter = keyPressCurentLetter;
-			let wrongKeypressletter = keyPressWrongLetter;
-
-			if (letterKeycap === letter) {
-				if (isAnswerWordLetter) {
-					currentKeypressLetter = true;
-				} else {
-					wrongKeypressletter = true;
-					// dispatch({ type: 'CURRENT_WRONG_ANSWER', payload: 1 });
-				}
-			}
-
-			return {
-				letter: letter,
-				keyPressWrongLetter: wrongKeypressletter,
-				keyPressCurentLetter: currentKeypressLetter,
-				isAnswerWordLetter: isAnswerWordLetter,
-			};
-		});
-
-		dispatch({ type: 'MODIFICATION_ANSWER_OBJECT', payload: newLettersObj });
+	const keyboardClickHandler = (clickedLetter: string) => {
+		let lettersHandler;
+		if (state.answer.includes(clickedLetter)) {
+			lettersHandler = state.goodLetters;
+			lettersHandler.push(clickedLetter);
+			dispatch({ type: 'SET_GOOD_LETTERS', payload: lettersHandler });
+			setGuessedLetters();
+		} else {
+			lettersHandler = state.wrongLetters;
+			lettersHandler.push(clickedLetter);
+			dispatch({ type: 'SET_WRONG_LETTERS', payload: lettersHandler });
+		}
 	};
 
-	const gameIsWonHandler = (isWon: boolean) => {
-		setGameIsWon(isWon);
-		// dispatch({ type: 'SET_GAME_IS_WON', payload: true });
+	const setGuessedLetters = () => {
+		let answerArray = [...state.answer];
+		let guessedLettersHandler = state.guessedLetters;
+
+		const guessedLettersArray = answerArray.filter(letter => {
+			if (state.goodLetters.includes(letter)) {
+				guessedLettersHandler.push(letter);
+				return guessedLettersHandler;
+			}
+		});
+
+		dispatch({ type: 'SET_GUESSED_LETTERS', payload: guessedLettersArray });
+	};
+
+	const checkGameIsWon = () => {
+		console.log(state.answer.length);
+
+		if (state.guessedLetters.length === state.answer.length && !state.winGamePopUp) {
+			console.log('Wchodze tu');
+			dispatch({ type: 'SHOW_WIN_GAME_POPUP' });
+		}
 	};
 
 	const resetGameHandler = () => {
-		dispatch({ type: 'DRAW_ANSWER_WORD' });
-
-		dispatch({
-			type: 'GENEREATE_ANSWER_OBJECT',
-			payload: randomizeAnswerLetters(),
-		});
-		setGameIsWon(false);
-		// dispatch({ type: 'SET_GAME_IS_WON', payload: false });
+		dispatch({ type: 'RESET_GAME' });
 	};
 
-	console.log(state.lettersObj);
+	checkGameIsWon();
+	console.log(state.answer);
 
-	if (!state.isLoadingAnswerLetters) {
-		dispatch({ type: 'GENEREATE_ANSWER_OBJECT', payload: randomizeAnswerLetters() });
-		dispatch({ type: 'LOADING_ANSWER_LETTERS', payload: true });
-	}
+	return (
+		<StyledDiv>
+			<Header />
+			<Gameboard />
+			<StyledKeyboardContainer>
+				<Answerboard answer={state.answer} guesedLetters={state.guessedLetters} />
+				<Keyboard
+					keyboardLetters={keyboardLetters}
+					wrongLetters={state.wrongLetters}
+					goodLetters={state.goodLetters}
+					onClickHandler={keyboardClickHandler}
+				/>
+			</StyledKeyboardContainer>
 
-	if (state.isLoadingAnswerLetters) {
-		return (
-			<StyledDiv>
-				<Header />
-				<Gameboard />
-				<StyledKeyboardContainer>
-					<Answerboard lettersObj={state.lettersObj} gameIsWonHandler={gameIsWonHandler} />
-					<Keyboard lettersObj={state.lettersObj} onClickHandler={keycapOnClickHandler} />
-				</StyledKeyboardContainer>
-
-				{/* {state.currentWrongAnswer >= 6 && (
-				<EndGame type='Game Over' resetButtonOnClick={resetGameHandler} />
-			)} */}
-				{gameIsWon && <EndGame type='You Won' resetButtonOnClick={resetGameHandler} />}
-			</StyledDiv>
-		);
-	} else {
-		return <StyledDiv></StyledDiv>;
-	}
+			{state.wrongLetters.length >= 6 && (
+				<EndGame type='Game Over' resetGameHandler={resetGameHandler} />
+			)}
+			{state.winGamePopUp && <EndGame type='You Won' resetGameHandler={resetGameHandler} />}
+		</StyledDiv>
+	);
 }
 
 const StyledDiv = styled.div`
