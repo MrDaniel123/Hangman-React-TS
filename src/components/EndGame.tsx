@@ -58,10 +58,17 @@ const ContainerDiv = styled.div<StyleProps>`
 
 		background-color: ${props => props.bgcColor};
 
+		@media (min-height: 720px) {
+			height: 120px;
+		}
+
 		& p {
 			font-size: 40px;
 			font-weight: bold;
 			color: #fff;
+			@media (min-height: 720px) {
+				font-size: 50px;
+			}
 		}
 	}
 
@@ -81,6 +88,11 @@ const ContainerDiv = styled.div<StyleProps>`
 		color: #fff;
 		cursor: pointer;
 		transition: background-color 0.1s;
+
+		@media (min-height: 720px) {
+			height: 90px;
+			width: 230px;
+		}
 
 		&:hover {
 			background-color: #196b6f;

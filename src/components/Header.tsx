@@ -10,7 +10,7 @@ const HeaderContainerDiv = styled.div`
 	display: flex;
 	justify-content: center;
 	align-content: center;
-	width: 360px;
+	width: 100%;
 	height: 60px;
 	background-color: #00503d;
 

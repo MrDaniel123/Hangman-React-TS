@@ -12,7 +12,7 @@ const Answerboard = ({ answer, guesedLetters }: AnswerProps) => {
 		if (guesedLetters.includes(letter)) {
 			return (
 				<LetterStyledDiv key={index}>
-					<p>{letter}</p>
+					<p>{letter.toUpperCase()}</p>
 					<span></span>
 				</LetterStyledDiv>
 			);
@@ -37,7 +37,7 @@ const StyledContainerDiv = styled.div`
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	width: 360px;
+	width: 100%;
 	height: 128px;
 `;
 
@@ -57,6 +57,15 @@ const LetterStyledDiv = styled.div`
 	width: 30px;
 	margin: 0 3px;
 
+	@media (min-width: 480px) {
+		height: 40px;
+		width: 40px;
+	}
+	@media (min-width: 520px) {
+		height: 45px;
+		width: 45px;
+	}
+
 	& p {
 		display: flex;
 		justify-content: center;
@@ -66,6 +75,13 @@ const LetterStyledDiv = styled.div`
 		font-size: 24px;
 		font-weight: bold;
 		color: #fff;
+
+		@media (min-width: 480px) {
+			font-size: 28px;
+		}
+		@media (min-width: 520px) {
+			font-size: 32px;
+		}
 	}
 
 	& span {
@@ -74,6 +90,13 @@ const LetterStyledDiv = styled.div`
 		border-radius: 3px;
 
 		background-color: #000;
+
+		@media (min-width: 480px) {
+			height: 5px;
+		}
+		@media (min-width: 520px) {
+			height: 7px;
+		}
 	}
 `;
 
@@ -87,6 +110,14 @@ const EmptyLetterDiv = styled.div`
 	width: 30px;
 	margin: 0 3px;
 
+	@media (min-width: 480px) {
+		height: 40px;
+		width: 40px;
+	}
+	@media (min-width: 520px) {
+		height: 45px;
+		width: 45px;
+	}
 	& p {
 		width: 100%;
 	}
@@ -97,6 +128,13 @@ const EmptyLetterDiv = styled.div`
 		border-radius: 3px;
 
 		background-color: #fff;
+
+		@media (min-width: 480px) {
+			height: 5px;
+		}
+		@media (min-width: 520px) {
+			height: 7px;
+		}
 	}
 `;
 

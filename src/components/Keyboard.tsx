@@ -73,9 +73,16 @@ const StyledkeyboardContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	flex-wrap: wrap;
-	width: 360px;
+	width: 100%;
 	height: 25px;
 	margin-top: 5px;
+
+	@media (min-width: 480px) {
+		height: 35px;
+	}
+	@media (min-width: 520px) {
+		height: 45px;
+	}
 `;
 
 const KeyCapButton = styled.button<PropsStyle>`
@@ -92,6 +99,15 @@ const KeyCapButton = styled.button<PropsStyle>`
 	/* transition: background-color 0.1s; */
 	background-color: ${props => props.bgc};
 
+	@media (min-width: 480px) {
+		height: 35px;
+		width: 35px;
+	}
+	@media (min-width: 520px) {
+		height: 45px;
+		width: 45px;
+	}
+
 	&:hover {
 		background-color: rgba(255, 255, 255, 0.9);
 	}
@@ -106,6 +122,13 @@ const KeyCapButton = styled.button<PropsStyle>`
 		-webkit-text-fill-color: transparent;
 		background-clip: text;
 		text-fill-color: transparent;
+
+		@media (min-width: 480px) {
+			font-size: 30px;
+		}
+		@media (min-width: 520px) {
+			font-size: 35px;
+		}
 	}
 `;
 

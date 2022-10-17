@@ -13,7 +13,6 @@ type StateReducer = {
 	wrongLetters: string[];
 	guessedLetters: string[];
 	winGamePopUp: boolean;
-	loosGamePopUp: boolean;
 };
 
 type ReducerAction =
@@ -75,7 +74,6 @@ const initialState: StateReducer = {
 	wrongLetters: [],
 	guessedLetters: [],
 	winGamePopUp: false,
-	loosGamePopUp: false,
 };
 
 function reducer(state: StateReducer, action: ReducerAction) {
@@ -95,7 +93,6 @@ function reducer(state: StateReducer, action: ReducerAction) {
 				wrongLetters: [],
 				guessedLetters: [],
 				winGamePopUp: false,
-				loosGamePopUp: false,
 				answer: answers[Math.floor(Math.random() * answers.length)],
 			};
 		default:
@@ -135,10 +132,7 @@ function App() {
 	};
 
 	const checkGameIsWon = () => {
-		console.log(state.answer.length);
-
 		if (state.guessedLetters.length === state.answer.length && !state.winGamePopUp) {
-			console.log('Wchodze tu');
 			dispatch({ type: 'SHOW_WIN_GAME_POPUP' });
 		}
 	};
@@ -148,12 +142,11 @@ function App() {
 	};
 
 	checkGameIsWon();
-	console.log(state.answer);
 
 	return (
 		<StyledDiv>
 			<Header />
-			<Gameboard />
+			<Gameboard wrongAnswerLetters={state.wrongLetters} />
 			<StyledKeyboardContainer>
 				<Answerboard answer={state.answer} guesedLetters={state.guessedLetters} />
 				<Keyboard
@@ -164,7 +157,7 @@ function App() {
 				/>
 			</StyledKeyboardContainer>
 
-			{state.wrongLetters.length >= 6 && (
+			{state.wrongLetters.length >= 7 && (
 				<EndGame type='Game Over' resetGameHandler={resetGameHandler} />
 			)}
 			{state.winGamePopUp && <EndGame type='You Won' resetGameHandler={resetGameHandler} />}
@@ -174,18 +167,25 @@ function App() {
 
 const StyledDiv = styled.div`
 	display: flex;
-	justify-content: center;
-	align-items: start;
 	flex-wrap: wrap;
-	position: relative;
+	align-content: center;
+	flex-direction: column;
 
-	height: 640px;
-	width: 360px;
+	position: relative;
+	min-height: 640px;
+	height: 100vh;
+	max-height: 720px;
+	min-width: 360px;
+	width: 100%;
+	max-width: 640px;
 `;
 
 const StyledKeyboardContainer = styled.div`
-	height: 252px;
-	width: 360px;
+	flex-grow: 1;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+	flex-wrap: wrap;
 
 	background: radial-gradient(62.7% 110.54% at 40.97% 29.96%, #008c7b 0%, #230f2f 100%);
 `;
