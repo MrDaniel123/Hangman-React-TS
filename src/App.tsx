@@ -157,7 +157,7 @@ function App() {
 				/>
 			</StyledKeyboardContainer>
 
-			{state.wrongLetters.length >= 7 && (
+			{state.wrongLetters.length >= 8 && (
 				<EndGame type='Game Over' resetGameHandler={resetGameHandler} />
 			)}
 			{state.winGamePopUp && <EndGame type='You Won' resetGameHandler={resetGameHandler} />}

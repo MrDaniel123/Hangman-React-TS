@@ -74,15 +74,15 @@ const StyledkeyboardContainer = styled.div`
 	align-items: center;
 	flex-wrap: wrap;
 	width: 100%;
-	height: 25px;
+	/* height: 25px; */
 	margin-top: 5px;
 
-	@media (min-width: 480px) {
+	/* @media (min-width: 480px) {
 		height: 35px;
 	}
 	@media (min-width: 520px) {
 		height: 45px;
-	}
+	} */
 `;
 
 const KeyCapButton = styled.button<PropsStyle>`
@@ -91,18 +91,14 @@ const KeyCapButton = styled.button<PropsStyle>`
 	align-items: center;
 	justify-content: center;
 
-	width: 29px;
-	height: 25px;
+	width: 8vw;
+	height: 9vw;
 	margin: 3px;
 	border-radius: 8px;
 	cursor: pointer;
 	/* transition: background-color 0.1s; */
 	background-color: ${props => props.bgc};
 
-	@media (min-width: 480px) {
-		height: 35px;
-		width: 35px;
-	}
 	@media (min-width: 520px) {
 		height: 45px;
 		width: 45px;
@@ -123,6 +119,12 @@ const KeyCapButton = styled.button<PropsStyle>`
 		background-clip: text;
 		text-fill-color: transparent;
 
+		@media (min-width: 380px) {
+			font-size: 24px;
+		}
+		@media (min-width: 420px) {
+			font-size: 28px;
+		}
 		@media (min-width: 480px) {
 			font-size: 30px;
 		}

@@ -9,6 +9,7 @@ import hangmanFourWrongLetter from '../assets/hangman4.png';
 import hangmanFiveWrongLetter from '../assets/hangman5.png';
 import hangmanSixWrongLetter from '../assets/hangman6.png';
 import hangmanSevenWrongLetter from '../assets/hangman7.png';
+import hangmanEightWrongLetter from '../assets/hangman8.png';
 
 type GameBoardState = {
 	wrongAnswerLetters: string[];
@@ -45,6 +46,10 @@ const Gameboard = ({ wrongAnswerLetters }: GameBoardState) => {
 			hangmanImage = hangmanSevenWrongLetter;
 			break;
 		}
+		case 8: {
+			hangmanImage = hangmanEightWrongLetter;
+			break;
+		}
 		default: {
 			hangmanImage = false;
 			break;
@@ -75,8 +80,8 @@ const StyledContainerDiv = styled.div`
 	);
 
 	img {
-		width: 360px;
-		height: 260px;
+		/* width: 360px;
+		height: 260px; */
 	}
 `;
 
