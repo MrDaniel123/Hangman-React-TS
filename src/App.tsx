@@ -52,24 +52,33 @@ const keyboardLetters: string[] = [
 ];
 
 const answers: string[] = [
-	'mouse',
-	'snake',
-	'elephant',
-	'butterfly',
-	'mouse',
-	'monkey',
-	'chicken',
-	'giraffe',
-	'crocodrile',
-	'hippoptamus',
-	'penguin',
-	'shark',
-	'kangaroo',
-	'dolphin',
+	'Moscow',
+	'Berlin',
+	'Amsterdam',
+	'Paris',
+	'Dubai',
+	'Rome',
+	'Frankfurt',
+	'Teheran',
+	'Warsaw',
+	'lisbon',
+	'Madrit',
+	'Zagreb',
+	'Vilnus',
+	'Vienna',
+	'Venice',
+	'Toronto',
+	'Sydney',
+	'Jerusalem',
+	'Helsinki',
+	'Geneva',
+	'Chicago',
+	'Barcelona',
+	'Budapest',
 ];
 
 const initialState: StateReducer = {
-	answer: answers[Math.floor(Math.random() * answers.length)],
+	answer: answers[Math.floor(Math.random() * answers.length)].toLowerCase(),
 	goodLetters: [],
 	wrongLetters: [],
 	guessedLetters: [],
@@ -93,7 +102,7 @@ function reducer(state: StateReducer, action: ReducerAction) {
 				wrongLetters: [],
 				guessedLetters: [],
 				winGamePopUp: false,
-				answer: answers[Math.floor(Math.random() * answers.length)],
+				answer: answers[Math.floor(Math.random() * answers.length)].toLowerCase(),
 			};
 		default:
 			throw new Error();

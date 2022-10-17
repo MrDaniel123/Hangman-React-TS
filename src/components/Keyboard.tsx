@@ -104,8 +104,15 @@ const KeyCapButton = styled.button<PropsStyle>`
 		width: 45px;
 	}
 
+	/* &:active,
 	&:hover {
 		background-color: rgba(255, 255, 255, 0.9);
+	} */
+
+	@media (hover: hover) {
+		&:hover {
+			background-color: rgba(255, 255, 255, 0.9);
+		}
 	}
 
 	& > p {
