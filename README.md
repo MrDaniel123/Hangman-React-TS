@@ -1,8 +1,8 @@
 # Hangman Game
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). ##[Watch Demo](https://mrdaniel123.github.io/Hangman-React-TS/)
 
-![HangmanScreenWin](https://user-images.githubusercontent.com/64327692/196372276-60203c55-34bd-4880-aca0-4f20f73ff956.jpg) ![HangmanScreenLoose](https://user-images.githubusercontent.com/64327692/196372716-a13a88d2-98be-4e89-b06d-fa7c028e3d0f.jpg)
+![HangmanScreenWin_219x329](https://user-images.githubusercontent.com/64327692/196375793-704e3f6a-59e8-4223-b47f-7b6ca0d7f871.jpeg) ![HangmanScreenLoose_219x329](https://user-images.githubusercontent.com/64327692/196375815-58a39e82-959b-4e54-80f8-91c3777e9628.jpeg)
 
 ## Technology
 
