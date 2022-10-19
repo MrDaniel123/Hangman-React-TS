@@ -1,113 +1,15 @@
 import React, { useReducer } from 'react';
 import styled from 'styled-components';
 
+import GlobalStyle from './utils/GlobalStyle';
 import Header from './components/Header';
 import Gameboard from './components/Gameboard';
 import Answerboard from './components/Answerboard';
 import Keyboard from './components/Keyboard';
 import EndGame from './components/EndGame';
 
-type StateReducer = {
-	answer: string;
-	goodLetters: string[];
-	wrongLetters: string[];
-	guessedLetters: string[];
-	winGamePopUp: boolean;
-};
-
-type ReducerAction =
-	| { type: 'SET_GOOD_LETTERS'; payload: string[] }
-	| { type: 'SET_WRONG_LETTERS'; payload: string[] }
-	| { type: 'SET_GUESSED_LETTERS'; payload: string[] }
-	| { type: 'SHOW_WIN_GAME_POPUP' }
-	| { type: 'RESET_GAME' };
-
-const keyboardLetters: string[] = [
-	'q',
-	'w',
-	'e',
-	'r',
-	't',
-	'y',
-	'u',
-	'i',
-	'o',
-	'p',
-	'a',
-	's',
-	'd',
-	'f',
-	'g',
-	'h',
-	'J',
-	'k',
-	'l',
-	'z',
-	'x',
-	'c',
-	'v',
-	'b',
-	'n',
-	'm',
-];
-
-const answers: string[] = [
-	'Moscow',
-	'Berlin',
-	'Amsterdam',
-	'Paris',
-	'Dubai',
-	'Rome',
-	'Frankfurt',
-	'Teheran',
-	'Warsaw',
-	'lisbon',
-	'Madrit',
-	'Zagreb',
-	'Vilnus',
-	'Vienna',
-	'Venice',
-	'Toronto',
-	'Sydney',
-	'Jerusalem',
-	'Helsinki',
-	'Geneva',
-	'Chicago',
-	'Barcelona',
-	'Budapest',
-];
-
-const initialState: StateReducer = {
-	answer: answers[Math.floor(Math.random() * answers.length)].toLowerCase(),
-	goodLetters: [],
-	wrongLetters: [],
-	guessedLetters: [],
-	winGamePopUp: false,
-};
-
-function reducer(state: StateReducer, action: ReducerAction) {
-	switch (action.type) {
-		case 'SET_GOOD_LETTERS':
-			return { ...state, goodLetters: action.payload };
-		case 'SET_WRONG_LETTERS':
-			return { ...state, wrongLetters: action.payload };
-		case 'SET_GUESSED_LETTERS':
-			return { ...state, guessedLetters: action.payload };
-		case 'SHOW_WIN_GAME_POPUP':
-			return { ...state, winGamePopUp: true };
-		case 'RESET_GAME':
-			return {
-				...state,
-				goodLetters: [],
-				wrongLetters: [],
-				guessedLetters: [],
-				winGamePopUp: false,
-				answer: answers[Math.floor(Math.random() * answers.length)].toLowerCase(),
-			};
-		default:
-			throw new Error();
-	}
-}
+import { keyboardLetters } from './data/data';
+import { initialState, reducer } from './utils/app-reducer';
 
 function App() {
 	const [state, dispatch] = useReducer(reducer, initialState);
@@ -153,24 +55,27 @@ function App() {
 	checkGameIsWon();
 
 	return (
-		<StyledDiv>
-			<Header />
-			<Gameboard wrongAnswerLetters={state.wrongLetters} />
-			<StyledKeyboardContainer>
-				<Answerboard answer={state.answer} guesedLetters={state.guessedLetters} />
-				<Keyboard
-					keyboardLetters={keyboardLetters}
-					wrongLetters={state.wrongLetters}
-					goodLetters={state.goodLetters}
-					onClickHandler={keyboardClickHandler}
-				/>
-			</StyledKeyboardContainer>
+		<>
+			<GlobalStyle />
+			<StyledDiv>
+				<Header />
+				<Gameboard wrongAnswerLetters={state.wrongLetters} />
+				<StyledKeyboardContainer>
+					<Answerboard answer={state.answer} guesedLetters={state.guessedLetters} />
+					<Keyboard
+						keyboardLetters={keyboardLetters}
+						wrongLetters={state.wrongLetters}
+						goodLetters={state.goodLetters}
+						onClickHandler={keyboardClickHandler}
+					/>
+				</StyledKeyboardContainer>
 
-			{state.wrongLetters.length >= 8 && (
-				<EndGame type='Game Over' resetGameHandler={resetGameHandler} />
-			)}
-			{state.winGamePopUp && <EndGame type='You Won' resetGameHandler={resetGameHandler} />}
-		</StyledDiv>
+				{state.wrongLetters.length >= 8 && (
+					<EndGame type='Game Over' resetGameHandler={resetGameHandler} />
+				)}
+				{state.winGamePopUp && <EndGame type='You Won' resetGameHandler={resetGameHandler} />}
+			</StyledDiv>
+		</>
 	);
 }
 
@@ -193,7 +98,7 @@ const StyledKeyboardContainer = styled.div`
 	flex-grow: 1;
 	display: flex;
 	justify-content: center;
-	align-content: center;
+	align-content: stretch;
 	flex-wrap: wrap;
 
 	background: radial-gradient(62.7% 110.54% at 40.97% 29.96%, #008c7b 0%, #230f2f 100%);

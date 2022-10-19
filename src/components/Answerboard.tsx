@@ -38,7 +38,6 @@ const StyledContainerDiv = styled.div`
 	justify-content: space-around;
 	align-items: center;
 	width: 100%;
-	height: 128px;
 `;
 
 const WordContainerDiv = styled.div`
@@ -139,14 +138,3 @@ const EmptyLetterDiv = styled.div`
 `;
 
 export default Answerboard;
-
-{
-	/* <LetterStyledDiv>
-<p>{letter.letter.toUpperCase()}</p>
-<span></span>
-</LetterStyledDiv>
-) : (
-<EmptyLetterDiv>
-<p></p>
-<span></span> */
-}

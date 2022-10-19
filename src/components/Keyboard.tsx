@@ -56,7 +56,7 @@ const Keyboard = ({
 	};
 
 	return (
-		<>
+		<KeyboardConatainer>
 			<StyledkeyboardContainer>{renderButtonKeyboardHandler(keyboardTop)}</StyledkeyboardContainer>
 			<StyledkeyboardContainer>
 				{renderButtonKeyboardHandler(keyboardMiddle)}
@@ -64,9 +64,15 @@ const Keyboard = ({
 			<StyledkeyboardContainer>
 				{renderButtonKeyboardHandler(keyboardBottom)}
 			</StyledkeyboardContainer>
-		</>
+		</KeyboardConatainer>
 	);
 };
+
+const KeyboardConatainer = styled.div`
+	display: flex;
+	flex-wrap: wrap;
+	align-content: center;
+`;
 
 const StyledkeyboardContainer = styled.div`
 	display: flex;
@@ -75,7 +81,6 @@ const StyledkeyboardContainer = styled.div`
 	flex-wrap: wrap;
 	width: 100%;
 	/* height: 25px; */
-	margin-top: 5px;
 
 	/* @media (min-width: 480px) {
 		height: 35px;

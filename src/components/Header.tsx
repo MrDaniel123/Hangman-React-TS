@@ -4,14 +4,14 @@ import styled from 'styled-components';
 
 const Header = () => {
 	return (
-		<HeaderContainerDiv>
+		<HeaderContainer>
 			<p>Hangman</p>
 			<span>World City</span>
-		</HeaderContainerDiv>
+		</HeaderContainer>
 	);
 };
 
-const HeaderContainerDiv = styled.div`
+const HeaderContainer = styled.div`
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;

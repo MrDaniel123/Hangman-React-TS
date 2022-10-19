@@ -4,10 +4,10 @@ import styled from 'styled-components';
 
 import resetIcon from '../assets/resetIcon.svg';
 
-interface Props {
+type Props = {
 	type: string;
 	resetGameHandler: () => void;
-}
+};
 
 type StyleProps = {
 	bgcColor: string;
