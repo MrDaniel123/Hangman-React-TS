@@ -1,6 +1,7 @@
 import React from 'react';
+import styled, { keyframes } from 'styled-components';
 
-import styled from 'styled-components';
+import { showPopup } from '../utils/GlobalStyle';
 
 import resetIcon from '../assets/resetIcon.svg';
 
@@ -44,6 +45,7 @@ const ContainerDiv = styled.div<StyleProps>`
 	left: 0;
 	height: 100%;
 	width: 100%;
+	animation: ${showPopup} 0.5s ease-out;
 
 	z-index: 3;
 	background-color: rgba(0, 0, 0, 0.4);

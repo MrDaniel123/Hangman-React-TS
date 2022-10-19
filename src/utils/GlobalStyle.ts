@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, keyframes } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
 * {
@@ -15,8 +15,16 @@ body {
 	font-family: Arial, Helvetica, sans-serif;
 
 	background-color: rgb(41, 41, 41);
+}`;
+
+export const showPopup = keyframes`
+from{
+	opacity: 0;
 }
 
+to{
+	opacity: 1;
+}
 `;
 
 export default GlobalStyle;
