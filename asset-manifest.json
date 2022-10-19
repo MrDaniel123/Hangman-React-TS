@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/Hangman-React-TS/static/js/main.6d459006.js",
+    "main.js": "/Hangman-React-TS/static/js/main.d817f4d3.js",
     "static/media/resetIcon.svg": "/Hangman-React-TS/static/media/resetIcon.9d5feb94105d9d4c1d35e51f6c9ac886.svg",
     "index.html": "/Hangman-React-TS/index.html",
-    "main.6d459006.js.map": "/Hangman-React-TS/static/js/main.6d459006.js.map"
+    "main.d817f4d3.js.map": "/Hangman-React-TS/static/js/main.d817f4d3.js.map"
   },
   "entrypoints": [
-    "static/js/main.6d459006.js"
+    "static/js/main.d817f4d3.js"
   ]
 }
